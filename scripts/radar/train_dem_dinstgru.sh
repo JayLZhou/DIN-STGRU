@@ -1,0 +1,1 @@
+python train_with_opt_pad.py -opt options/radar/dem_dinstgru.yml --is_training 1

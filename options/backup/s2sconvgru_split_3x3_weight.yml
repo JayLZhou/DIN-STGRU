@@ -1,0 +1,50 @@
+################################# training settings  #################################
+# data
+dataset_name: 'satellite'
+data_root: /mnt/A/satelite/datasets/
+save_dir: checkpoints/Seq2SeqSplitConvGRU_split_3x3_weight
+gen_frm_dir: results/Seq2SeqSplitConvGRU_split_3x3_weight
+tb_log_dir: tb_log/Seq2SeqSplitConvGRU_split_3x3_weight/
+save_root: Seq2SeqSplitConvGRU_split_3x3_weight/
+input_length: 4
+total_length: 12
+img_width: 400
+img_height: 300
+padding_H: 4 
+padding_W: 0
+img_channel: 1
+num_workers: 4
+
+
+# model
+model_name: s2s_Splitconvgru
+# pretrained_model: ~
+pretrained_model: /home/ices/yl/SatelliteSP/checkpoints/Seq2SeqSplitConvGRU_split_3x3_weight/model-36400-0.0015226746927946807.ckpt
+strict: True
+# num_hidden: 64,32,16
+num_hidden: 72, 36, 18
+filter_size: 3
+stride: 1
+patch_size: 1
+layer_norm: 0
+
+
+# scheduled sampling
+scheduled_sampling: 0
+sampling_stop_iter: 10000
+sampling_start_value: 1.0
+sampling_changing_rate: 0.0001
+
+# optimization
+lr: 0.001
+max_iterations: 100000
+lr_steps: [5000, 10000, 15000, 20000, 25000]
+reverse_input: 1
+test_batch_size: 1
+batch_size: 4
+epochs: 100
+display_interval: 50
+test_interval: 400
+snapshot_interval: 5000
+num_save_samples: 10
+gpu_ids: [1]

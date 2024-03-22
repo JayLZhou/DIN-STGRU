@@ -1,0 +1,144 @@
+################################# training settings  #################################
+# data
+dataset_name: 'radar'
+# train_data_root: /mnt/data/radar/dem/copy_2018/radar
+train_data_root: /mnt/data/radar/dem/2018/radar
+test_data_root: /mnt/data/radar/dem/2019/radar
+# train_sat_data_root: /mnt/data/radar/dem/copy_2018/satellite
+train_sat_data_root: /mnt/data/radar/dem/2018/satellite
+test_sat_data_root: /mnt/data/radar/dem/2019/satellite
+# result
+exp_name: MD-ConvGRU
+result_root: /mnt/data/result/TEST/
+
+input_length: 5
+sat_input_length: 5
+total_length: 25
+img_width: 384
+img_height: 384
+padding_H: 0
+padding_W: 0
+img_channel: 1
+num_workers: 4
+
+# model
+model_name: s2s_nlca_md_convgru
+pretrained_model: /mnt/data/result/TEST/checkpoint/md_convgru-0.ckpt
+start_itr: 0
+strict: True
+num_hidden: [64,32,16]
+filter_size: 5
+stride: 1
+patch_size: 1
+layer_norm: False
+
+# 多源数据
+dem: True
+month: True
+sat: True
+nlca: False
+# *************
+activation: relu
+
+# scheduled sampling
+scheduled_sampling: 0
+sampling_stop_iter: 10000
+sampling_start_value: 1.0
+sampling_changing_rate: 0.0001
+
+
+# optimization
+lr: 0.0001
+max_iterations: 50000
+lr_steps: [5000, 10000, 20000, 40000]
+reverse_input: 0
+batch_size: 2
+test_batch_size: 4
+epochs: 100
+display_interval: 50
+test_interval: 1000
+snapshot_interval: 5000
+num_save_samples: 10
+# **************
+gpu_ids: [0]
+
+
+# 模型的输入
+# seq2seq模型decoder部分的输入
+decode_in_channel: 128
+decode_in_shape: [32, 32]
+model:
+  layer_num: 3
+  encoder:
+    radar:
+      downsample:
+        - {k: 7, in: 1, out: 16, stride: 3}
+        - {k: 5, in: 16, out: 32, stride: 2}
+        - {k: 3, in: 32, out: 64, stride: 2}
+      gru:
+        # i2h和h2h分别是input2hidden的卷积核大小和hidden2hidden的卷积核大小
+        - {in: 16, out: 16, i2h: 5, h2h: 5}
+        - {in: 32, out: 32, i2h: 3, h2h: 3}
+        - {in: 64, out: 64, i2h: 3, h2h: 3}
+    sat:
+      downsample:
+        - {k: 7, in: 14, out: 16, stride: 3}
+        - {k: 5, in: 16, out: 32, stride: 2}
+        - {k: 3, in: 32, out: 64, stride: 2}
+      gru:
+        - {in: 16, out: 16, i2h: 5, h2h: 5}
+        - {in: 32, out: 32, i2h: 3, h2h: 3}
+        - {in: 64, out: 64, i2h: 3, h2h: 3}
+  decoder:
+    num: 4
+    input: false
+    upsample:
+      - {k: 7, in: 32, out: 16, stride: 3}
+      - {k: 5, in: 64, out: 32, stride: 2}
+      - {k: 3, in: 128, out: 64, stride: 2}
+    gru:
+      - {in: 32, out: 32, i2h: 5, h2h: 5}
+      - {in: 64, out: 64, i2h: 3, h2h: 3}
+      - {in: 128, out: 128, i2h: 3, h2h: 3}
+      # 最后一层GRU，并没有输入，所以i2h可以不要
+    final:
+      {k: 3, in: 16, out: 1, stride: 1}
+
+
+
+# model:
+#   layer_num: 3
+#   encoder:
+#     radar:
+#       downsample:
+#         - {k: 7, in: 1, out: 32, stride: 3}
+#         - {k: 5, in: 32, out: 64, stride: 2}
+#         - {k: 3, in: 64, out: 128, stride: 2}
+#       gru:
+#         # i2h和h2h分别是input2hidden的卷积核大小和hidden2hidden的卷积核大小
+#         - {in: 32, out: 32, i2h: 5, h2h: 5}
+#         - {in: 64, out: 64, i2h: 3, h2h: 3}
+#         - {in: 128, out: 128, i2h: 3, h2h: 3}
+#     sat:
+#       downsample:
+#         - {k: 7, in: 14, out: 32, stride: 3}
+#         - {k: 5, in: 32, out: 64, stride: 2}
+#         - {k: 3, in: 64, out: 128, stride: 2}
+#       gru:
+#         - {in: 32, out: 32, i2h: 5, h2h: 5}
+#         - {in: 64, out: 64, i2h: 3, h2h: 3}
+#         - {in: 128, out: 128, i2h: 3, h2h: 3}
+#   decoder:
+#     num: 1
+#     input: false
+#     upsample:
+#       - {k: 7, in: 64, out: 32, stride: 3}
+#       - {k: 5, in: 128, out: 64, stride: 2}
+#       - {k: 3, in: 256, out: 128, stride: 2}
+#     gru:
+#       - {in: 64, out: 64, i2h: 5, h2h: 5}
+#       - {in: 128, out: 128, i2h: 3, h2h: 3}
+#       - {in: 256, out: 256, i2h: 3, h2h: 3}
+#       # 最后一层GRU，并没有输入，所以i2h可以不要
+#     final:
+#       {k: 3, in: 32, out: 1, stride: 1}

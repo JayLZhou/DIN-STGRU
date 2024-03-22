@@ -1,0 +1,55 @@
+################################# training settings  #################################
+# data
+dataset_name: 'radar_sat'
+# train_data_root: /mnt/data/radar/2hour/2019
+# test_data_root: /mnt/data/radar/2hour/2020
+train_data_root: /mnt/data/radar/multi_data/2018/radar
+test_data_root: /mnt/data/radar/multi_data/2019/radar
+# result
+exp_name: PredRNN
+result_root: /mnt/data/result/radar/
+
+
+input_length: 5
+total_length: 25
+img_width: 384
+img_height: 384
+padding_H: 0
+padding_W: 0
+img_channel: 1
+num_workers: 4
+
+
+# model
+model_name: predrnn
+pretrained_model: ~
+start_itr: 0
+strict: True
+num_hidden: [16,16,16,16]
+filter_size: 5
+stride: 1
+patch_size: 4
+layer_norm: 1
+layer_norm: False
+
+# scheduled sampling
+scheduled_sampling: 0
+sampling_stop_iter: 10000
+sampling_start_value: 1.0
+sampling_changing_rate: 0.0001
+
+# optimization
+lr: 0.00001
+max_iterations: 50000
+lr_steps: [10000, 20000, 40000]
+# lr_steps: ~
+reverse_input: 0
+batch_size: 1
+test_batch_size: 1
+epochs: 100
+display_interval: 50
+test_interval: 500
+snapshot_interval: 5000
+num_save_samples: 10
+# **************
+gpu_ids: [1]

@@ -1,0 +1,1 @@
+python train_with_opt_pad.py -opt options/radar/s2s_gn_convgru.yml --is_training 0

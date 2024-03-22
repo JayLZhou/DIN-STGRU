@@ -1,0 +1,1 @@
+python train_with_opt_pad.py -opt options/radar_sat/s2sconvgru.yml --is_training 1

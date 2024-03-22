@@ -1,0 +1,1 @@
+python train_with_opt_pad.py -opt options/radar/gn_hti_convgru.yml --is_training 1

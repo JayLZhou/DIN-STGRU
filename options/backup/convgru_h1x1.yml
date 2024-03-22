@@ -1,0 +1,46 @@
+################################# training settings  #################################
+# data
+dataset_name: 'satellite'
+data_root: /mnt/A/satelite/datasets/
+save_dir: checkpoints/convgru_h1x1
+gen_frm_dir: results/convgru_h1x1
+tb_log_dir: tb_log/convgru_h1x1/
+save_root: convgru_h1x1/
+input_length: 4
+total_length: 12
+img_width: 400
+img_height: 300
+img_channel: 1
+num_workers: 4
+
+
+# model
+model_name: convgru
+pretrained_model: /home/ices/yl/SatelliteSP/checkpoints/convgru_h1x1/model-22800-0.001821292334003374.ckpt
+strict: True
+num_hidden: 32,64,64,64
+filter_size: 5
+stride: 1
+patch_size: 4
+layer_norm: 1
+InvConv_h_num: 3
+InvConv_x_num: 0
+
+# scheduled sampling
+scheduled_sampling: 1
+sampling_stop_iter: 20000
+sampling_start_value: 1.0
+sampling_changing_rate: 0.00005
+
+# optimization
+lr: 0.0001
+max_iterations: 30000
+lr_steps: [5000, 10000, 15000, 20000, 25000]
+reverse_input: 1
+batch_size: 4
+epochs: 100
+display_interval: 50
+test_interval: 400
+snapshot_interval: 5000
+num_save_samples: 10
+gpu_ids: [0]

@@ -1,0 +1,1 @@
+python train_with_opt_pad.py -opt options/dense_lnconvgru.yml --is_training 1

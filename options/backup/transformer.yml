@@ -1,0 +1,31 @@
+################################# training settings  #################################
+data_root: /mnt/A/satelite/datasets/
+n_eval: 8
+n_future: 8
+n_past: 4
+log_dir: logs
+num_workers: 4
+batch_size: 4
+beta: 0.0001
+beta1: 0.9
+lr: !!float 1e-05
+optimizer: adam
+niter: 1000
+seed: 1
+gpu_ids: [0]
+
+################################# model settings ####################################
+model: transformer
+depth: 6
+dropout: 0.4
+emb_dim: 1024
+heads: 4
+model_dir: /home/ices/yl/SatelliteSP/logs/transformer/model_city_trial=400x400-n_past=4-n_future=8-lr=0.0000100-beta=0.0001000/continued/
+
+################################# seq settings ####################################
+data_type: sequence
+padding_H: 0
+padding_W: 0
+channels: 1
+image_height: 300
+image_width: 400

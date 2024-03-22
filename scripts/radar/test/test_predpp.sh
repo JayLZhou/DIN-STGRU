@@ -1,0 +1,1 @@
+python train_with_opt_pad.py -opt options/radar/PredRNNPP.yml --is_training 0 --is_real_testing 1
